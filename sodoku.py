@@ -45,26 +45,47 @@ def generate_valid_board(num_random, show=False):
         for c in range(len(section)):
             for r in range(len(section[c])):
                 main_board[c+(3-(3-int((index-1)/3)*3))][r+(((index-(3*((int((index-1)/3)+1)-1)))*3)-3)] = section[c,r].copy()
-    if print:
+    if show:
         for l in main_board: print(l)
 
-def randomize_board(board):
-    board = np.array(board)
-    horizontal = random.randint(0,1)
-    vertical = random.randint(0,1)
-    rotation = random.randint(0,3)
-    if horizontal == 1:
-        np.flip(board, axis=0)
-    if vertical == 1:
-        np.flip(board, axis=1)
-    np.rot90(board, rotation, axes=(1,0))
-    for i in range(1,10):
-        number = random.randint(1,9)
-        while number != i:
-            number = random.randint(1,9)
-        board = np.where(board == i, 0, board)
-        board = np.where(board == number, i, board)
-        board = np.where(board == 0, number, board)
+def randomize_board(board, show=False):
+    for i in range(3):
+        indexes = random.sample([0,1,2], 3)
+        colum0 = board[:, indexes[0]+(i*3)].copy()
+        colum1 = board[:, indexes[1]+(i*3)].copy()
+        colum2 = board[:, indexes[2]+(i*3)].copy()
+        board[:, 0+(i*3)] = colum0
+        board[:, 1+(i*3)] = colum1
+        board[:, 2+(i*3)] = colum2
+        
+    for i in range(3):
+        indexes = random.sample([0,1,2], 3)
+        print(indexes)
+        colum0 = board[indexes[0]+(i*3), :].copy()
+        colum1 = board[indexes[1]+(i*3), :].copy()
+        colum2 = board[indexes[2]+(i*3), :].copy()
+        board[0+(i*3), :] = colum0
+        board[1+(i*3), :] = colum1
+        board[2+(i*3), :] = colum2
+    
+    horizontal = random.randint(0,10)
+    vertical = random.randint(0,10)
+    rotation = random.randint(0,4)
+    if horizontal % 2 == 0:
+        board = np.flip(board, axis=0)
+    if vertical % 2 == 0:
+        board = np.flip(board, axis=1)
+    board = np.rot90(board, rotation, axes=(1,0))
+    # for i in range(1,10):
+    #     number = random.randint(1,9)
+    #     print(number)
+    #     while number != i:
+    #         number = random.randint(1,9)
+    #     board = np.where(board == i, 0, board)
+    #     board = np.where(board == number, i, board)
+    #     board = np.where(board == 0, number, board)
+    if show:
+        for l in board: print(l)
                 
     
 # 0 = row
@@ -88,4 +109,5 @@ def check(axis, index, number, board_to_check):
     return True
         
 #generate_board(True)
-generate_valid_board(100, True)
+generate_valid_board(100, False)
+randomize_board(main_board, show=True)
